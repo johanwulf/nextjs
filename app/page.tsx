@@ -9,10 +9,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import * as EmailValidator from "email-validator";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
 export function LoginForm({ className, ...props }: CardProps) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [validEmail, setValidEmail] = useState(false);
+
     return (
         <Card className={cn("w-[380px]", className)} {...props}>
             <CardHeader>
@@ -22,11 +27,18 @@ export function LoginForm({ className, ...props }: CardProps) {
                 <div className="flex flex-col gap-4">
                     <div>
                         <Label htmlFor="email">Email</Label>
-                        <Input type="email" placeholder="Email address" />
+                        <Input
+                            type="email"
+                            placeholder="Email address"
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setValidEmail(EmailValidator.validate(e.target.value));
+                            }}
+                        />
                     </div>
                     <div>
                         <Label htmlFor="password">New password</Label>
-                        <Input type="password" placeholder="Password" />
+                        <Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                     </div>
                 </div>
                 <div className="flex items-center space-x-4 rounded-md border p-4">
@@ -39,7 +51,14 @@ export function LoginForm({ className, ...props }: CardProps) {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">
+                <Button
+                    className="w-full"
+                    onClick={() => {
+                        console.log(email, password);
+                        console.log(EmailValidator.validate(email));
+                    }}
+                    disabled={!validEmail}
+                >
                     <Check className="mr-2 h-4 w-4" /> Create account
                 </Button>
             </CardFooter>
@@ -49,7 +68,6 @@ export function LoginForm({ className, ...props }: CardProps) {
 
 export default function Home() {
     const [theme, setTheme] = useState<string>("light");
-    console.log(theme);
     return (
         <div className={`flex flex-col w-screen h-screen ${theme === "light" ? "" : "bg-gray-950"}`}>
             <nav className={`h-12 flex items-center justify-end p-4 w-screen ${theme === "light" ? "" : "bg-gray-950"}`}>
