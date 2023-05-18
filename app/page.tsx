@@ -1,59 +1,46 @@
-import { BellRing, Check } from "lucide-react";
+"use client";
+import { BellRing, Check, Sun, Moon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-
-const notifications = [
-    {
-        title: "Your call has been confirmed.",
-        description: "1 hour ago",
-    },
-    {
-        title: "You have a new message!",
-        description: "1 hour ago",
-    },
-    {
-        title: "Your subscription is expiring soon!",
-        description: "2 hours ago",
-    },
-];
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
-export function CardDemo({ className, ...props }: CardProps) {
+export function LoginForm({ className, ...props }: CardProps) {
     return (
         <Card className={cn("w-[380px]", className)} {...props}>
             <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>You have 3 unread messages.</CardDescription>
+                <CardTitle>Create an account</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-4">
-                <div className=" flex items-center space-x-4 rounded-md border p-4">
+            <CardContent className="grid gap-6">
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input type="email" placeholder="Email address" />
+                    </div>
+                    <div>
+                        <Label htmlFor="password">New password</Label>
+                        <Input type="password" placeholder="Password" />
+                    </div>
+                </div>
+                <div className="flex items-center space-x-4 rounded-md border p-4">
                     <BellRing />
                     <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium leading-none">Push Notifications</p>
-                        <p className="text-sm text-muted-foreground">Send notifications to device.</p>
+                        <p className="text-sm font-medium leading-none">Notifications</p>
+                        <p className="text-sm text-muted-foreground">Allow us to send you imporant messages to you</p>
                     </div>
                     <Switch />
-                </div>
-                <div>
-                    {notifications.map((notification, index) => (
-                        <div key={index} className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
-                            <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
-                            <div className="space-y-1">
-                                <p className="text-sm font-medium leading-none">{notification.title}</p>
-                                <p className="text-sm text-muted-foreground">{notification.description}</p>
-                            </div>
-                        </div>
-                    ))}
                 </div>
             </CardContent>
             <CardFooter>
                 <Button className="w-full">
-                    <Check className="mr-2 h-4 w-4" /> Mark all as read
+                    <Check className="mr-2 h-4 w-4" /> Create account
                 </Button>
             </CardFooter>
         </Card>
@@ -61,5 +48,17 @@ export function CardDemo({ className, ...props }: CardProps) {
 }
 
 export default function Home() {
-    return CardDemo({ className: "hello" });
+    const [theme, setTheme] = useState<string>("light");
+    console.log(theme);
+    return (
+        <div className={`flex flex-col w-screen h-screen ${theme === "light" ? "" : "bg-gray-950"}`}>
+            <nav className={`h-12 flex items-center justify-end p-4 w-screen ${theme === "light" ? "" : "bg-gray-950"}`}>
+                <button onClick={() => (theme === "light" ? setTheme("dark") : setTheme("light"))}>
+                    {theme === "light" ? <Moon /> : <Sun color="white" />}
+                </button>
+            </nav>
+            <Separator className={theme} />
+            <div className="flex flex-grow items-center justify-center">{LoginForm({ className: theme })}</div>
+        </div>
+    );
 }
